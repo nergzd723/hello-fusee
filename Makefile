@@ -47,6 +47,9 @@ bootstrap.o: bootstrap.S
 bootstrap.bin: bootstrap.elf
 	$(OBJCOPY) -v -O binary $< $@
 
+intermezzo.bin: intermezzo.elf
+	$(OBJCOPY) -v -O binary $< $@
+
 clean:
 	rm -f *.o *.elf *.bin
 

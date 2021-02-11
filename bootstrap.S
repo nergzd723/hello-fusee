@@ -1,21 +1,19 @@
 .global _start
 .global _usb_transfer_wrapper
+.global _reset
 .extern kernel
 _start:
     ldr r0, =string
     mov r1, #str_len
-    ldr r4, =_continue
     bl _usb_transfer
-_continue:
     ldr r0, =string2
     mov r1, #str2_len
-    ldr r4, =_c2
     bl _usb_transfer
-_c2:
     bl kernel
 _end:
     bl _end
 _usb_transfer:
+    push {lr}
     sub r2, sp, #4
     sub sp, sp, #4
     ldr ip, =0xFFF05093
@@ -28,13 +26,14 @@ _usb_reset:
     ldr ip, =0xFFF04997
     mov lr, pc
     bx ip
-    bx r4
+    pop {pc}
 _usb_transfer_wrapper:
     push {lr}
-    ldr r4, =_return_back
     bl _usb_transfer
-_return_back:
     pop {lr}
+    bx lr
+_reset:
+    ldr lr, =0x0
     bx lr
 .global  string
 .size   string, str_end - string
